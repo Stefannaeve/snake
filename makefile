@@ -11,10 +11,10 @@ RM = rm -f
 OBJDIR = obj
 
 # PATHS
-_DEPS = main.h Arraylist.h
+_DEPS = main.h Arraylist.h introScreen.h
 DEPS = $(patsubst %, $(INCLDIR)/%, $(_DEPS))
 
-_OBJS = main.o Arraylist.o
+_OBJS = main.o Arraylist.o introScreen.o
 OBJS = $(patsubst %, $(OBJDIR)/%, $(_OBJS))
 
 # RULES

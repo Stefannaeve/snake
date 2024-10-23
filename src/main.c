@@ -3,12 +3,33 @@
 #include <unistd.h>
 #include "../include/main.h"
 #include "../include/Arraylist.h"
-#include <ncurses.h>
+#include "../include/introScreen.h"
 
 void renderBoard(BOARD *board);
 
 int main(void) {
     BOARD board;
+
+    initscr();
+    start_color();
+    //raw();
+    keypad(stdscr, TRUE);
+    noecho();
+
+    init_pair(1, COLOR_RED, COLOR_BLACK);
+    init_pair(2, COLOR_GREEN, COLOR_BLACK);
+    init_pair(3, COLOR_CYAN, COLOR_BLACK);
+    init_pair(4, COLOR_BLUE, COLOR_BLACK);
+
+    //init_pair(1, COLOR_RED, COLOR_RED);
+    //init_pair(2, COLOR_GREEN, COLOR_GREEN);
+    //init_pair(3, COLOR_CYAN, COLOR_CYAN);
+    //init_pair(4, COLOR_BLUE, COLOR_BLUE);
+
+    //attron(A_REVERSE | A_BLINK);
+    introScreen();
+    clear();
+
     board.xSize = BOARD_X_LENGTH;
     board.ySize = BOARD_Y_LENGTH;
     board.board = malloc((board.xSize * sizeof(BLOCK)));

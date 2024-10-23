@@ -1,6 +1,10 @@
 #ifndef MAIN_H
 #define MAIN_H
 
+#include <ncurses.h>
+#include<unistd.h>
+#include <string.h>
+
 #define BOARD_X_LENGTH 12
 #define BOARD_Y_LENGTH 12
 #define INITIAL_SNAKE_LENGTH 4

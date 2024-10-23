@@ -6,7 +6,10 @@ set(CMAKE_C_STANDARD 11)
 add_executable(snake src/main.c
         src/Arraylist.c
         include/main.h
-        include/Arraylist.h)
+        include/Arraylist.h
+        src/introScreen.c
+        include/introScreen.h
+)
 
 find_package(Curses REQUIRED)
 include_directories(${CURSES_INCLUDE_DIR})
