@@ -1,9 +1,3 @@
-//
-// Created by stefan on 17.10.24.
-//
-
-#include "main.h"
-
 #ifndef ARRAYLIST_H
 #define ARRAYLIST_H
 

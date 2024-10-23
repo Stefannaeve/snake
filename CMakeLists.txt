@@ -3,7 +3,11 @@ project(snake C)
 
 set(CMAKE_C_STANDARD 11)
 
-add_executable(snake main.c
-        Arraylist.c
-        main.h
-        Arraylist.h)
+add_executable(snake src/main.c
+        src/Arraylist.c
+        include/main.h
+        include/Arraylist.h)
+
+find_package(Curses REQUIRED)
+include_directories(${CURSES_INCLUDE_DIR})
+target_link_libraries(snake ${CURSES_LIBRARIES})

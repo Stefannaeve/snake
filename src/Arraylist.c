@@ -1,4 +1,4 @@
-#include "Arraylist.h"
+#include "../include/Arraylist.h"
 
 #include <stdlib.h>
 

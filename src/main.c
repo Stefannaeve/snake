@@ -1,8 +1,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
-#include "main.h"
-#include "Arraylist.h"
+#include "../include/main.h"
+#include "../include/Arraylist.h"
+#include <ncurses.h>
 
 void renderBoard(BOARD *board);
 
@@ -54,6 +55,7 @@ int main(void) {
 
     renderBoard(&board);
 
+    return 0;
 }
 
 void renderBoard(BOARD *board) {
