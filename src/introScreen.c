@@ -1,14 +1,12 @@
 #include "../include/main.h"
 
 
-void forLoop(int rows, int cols, int total, char character);
 void enterUserName();
 
 int introScreen() {
     int row, col;
     int pixelCount;
     int finishedRows = 0, finishedColumns = 0, currentPrints = 0;
-    char *snake = "S N A K E   ~~~:";
 
     int howManyRowsTop = 0;
     int howManyColumnsLeft = 0;
@@ -28,7 +26,6 @@ int introScreen() {
         if (((row / 4) * 3 < finishedRows || (col / 4) * 3 < finishedColumns) && (!(finishedColumns % 2) && !(finishedRows % 2))) {
             usleep(30000);
             refresh();
-            mvprintw(row / 2, (col - strlen(snake)) / 2, "%s", snake);
             break;
         }
 
@@ -121,35 +118,43 @@ int introScreen() {
         }
     }
 
-    getch();
-
-    enterUserName();
+    enterUserName(finishedRows, finishedColumns);
 
     endwin();
 
     return 0;
 }
 
-void forLoop(int rows, int cols, int total, char character) {
-    for (int i = 0; i < total; i++) {
-        mvaddch(rows, cols, character);
-        refresh();
-    }
-}
-
 void enterUserName() {
 
-    int row, col;
+    int row, col, rowsDevisable, changeForCentering = 0;
+    char askUserName[] = "Enter your username: ";
+    char *snake = "S N A K E   ~~~:";
+    char userName[10];
+
+    getmaxyx(stdscr, row, col);
+
+    rowsDevisable = row % 2;
+
+    // Checks if the rows are devisable by two or not
+    // This is to change the position to the upper part
+    // of the middle of screen in the case of an even number
+    if (!rowsDevisable) {
+        changeForCentering = 1;
+    }
+
+    mvprintw(row / 2 - changeForCentering, (col - strlen(snake)) / 2, "%s", snake);
+
+    getch();
 
     getmaxyx(stdscr, row, col);
     echo();
 
-    char mesg[] = "Enter your username: ";
-    char str[10];
+    int value = row / 2 -changeForCentering;
 
-    mvprintw(row / 2, (col - strlen(mesg)) / 2, "%s", mesg);
-    getnstr(str, 10);
-    mvprintw(row / 2+2, (col - strlen(str)) / 2, "Username: %s", str);
+    mvprintw(row / 2 - changeForCentering, (col - strlen(askUserName)) / 2, "%s", askUserName);
+    getnstr(userName, 10);
+    mvprintw(row / 2+1 - changeForCentering, (col - strlen(userName)) / 2, "Username: %s", userName);
     getch();
     endwin();
 
