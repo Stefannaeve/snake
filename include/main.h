@@ -4,6 +4,8 @@
 #include <ncurses.h>
 #include<unistd.h>
 #include <string.h>
+#include "../include/SNLogger.h"
+#include <time.h>
 
 #define BOARD_X_LENGTH 12
 #define BOARD_Y_LENGTH 12

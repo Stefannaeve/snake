@@ -9,6 +9,8 @@ add_executable(snake src/main.c
         include/Arraylist.h
         src/introScreen.c
         include/introScreen.h
+        src/SNLogger.c
+        include/SNLogger.h
 )
 
 find_package(Curses REQUIRED)
