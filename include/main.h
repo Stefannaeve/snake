@@ -26,6 +26,8 @@ typedef struct _RENDER_BLOCK {
 typedef struct _BLOCK {
     int x;
     int y;
+    int actionPositionMetaPositionX;
+    int actionPositionMetaPositionY;
     RENDER_BLOCK render_block;
 } BLOCK;
 
