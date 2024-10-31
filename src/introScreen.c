@@ -1,5 +1,5 @@
 #include "../include/main.h"
-
+#include "../include/introScreen.h"
 
 void enterUserName();
 
@@ -34,7 +34,7 @@ int introScreen() {
             for (int i = 0; i < col - finishedColumns; ++i) {
                 mvaddch(0, i, character);
                 refresh();
-                usleep(2000);
+                usleep(SPEED);
             }
             finishedRows++;
         }
@@ -43,7 +43,7 @@ int introScreen() {
             for (int i = 0; i < row - finishedRows; ++i) {
                 mvaddch(i+1, col-1, sideCharacter);
                 refresh();
-                usleep(10000);
+                usleep(SPEED*5);
             }
             finishedColumns++;
         }
@@ -60,7 +60,7 @@ int introScreen() {
             for (int i = 0; i < col - finishedColumns; ++i) {
                 mvaddch(howManyRowsTop, i+howManyColumnsLeft, character);
                 refresh();
-                usleep(2000);
+                usleep(SPEED);
             }
             finishedRows++;
         }
@@ -77,7 +77,7 @@ int introScreen() {
             for (int i = row - howManyRowsTopAndBottom; i > howManyRowsTopAndBottom; --i) {
                 mvaddch(i-1, howManyColumnsLeft, sideCharacter);
                 refresh();
-                usleep(10000);
+                usleep(SPEED*5);
             }
             finishedColumns++;
         }
@@ -95,7 +95,7 @@ int introScreen() {
             for (int i = col - howManyColumnsRight; i > howManyColumnsLeft - 1; --i) {
                 mvaddch(row-howManyRowsBottom-1, i, character);
                 refresh();
-                usleep(2000);
+                usleep(SPEED);
             }
             finishedRows++;
         }
@@ -112,7 +112,7 @@ int introScreen() {
             for (int i = 0; i < row - finishedRows; ++i) {
                 mvaddch(i+howManyRowsTop, col-howManyColumnsRight-1, sideCharacter);
                 refresh();
-                usleep(10000);
+                usleep(SPEED*5);
             }
             finishedColumns++;
         }
@@ -156,6 +156,5 @@ void enterUserName() {
     getnstr(userName, 10);
     mvprintw(row / 2+1 - changeForCentering, (col - strlen(userName)) / 2, "Username: %s", userName);
     getch();
-    endwin();
 
 }
