@@ -1,7 +1,7 @@
 #ifndef INTROSCREEN_H
 #define INTROSCREEN_H
 
-#define SPEED 200
+#define SPEED 20
 
 int introScreen();
 

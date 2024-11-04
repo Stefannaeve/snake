@@ -1,5 +1,6 @@
 #include "../include/main.h"
 #include "../include/introScreen.h"
+#include <string.h>
 
 void enterUserName();
 
@@ -129,7 +130,17 @@ void enterUserName() {
 
     int row, col, rowsDevisable, changeForCentering = 0;
     char askUserName[] = "Enter your username: ";
-    char *snake = "S N A K E   ~~~:";
+    char *snake = "S N A K E   ";
+    char snak[17] = {0};
+    char something[5];
+    something[0] = SNAKE_TAIL;
+    something[1] = SNAKE_BODY;
+    something[2] = SNAKE_BODY;
+    something[3] = SNAKE_HEAD;
+    something[4] = '\0';
+    strncpy(snak, snake, 12);
+    strncat(snak, something, 4);
+    snak[16] = '\0';
     char userName[10];
 
     getmaxyx(stdscr, row, col);
@@ -143,7 +154,7 @@ void enterUserName() {
         changeForCentering = 1;
     }
 
-    mvprintw(row / 2 - changeForCentering, (col - strlen(snake)) / 2, "%s", snake);
+    mvprintw(row / 2 - changeForCentering, (col - strlen(snake)) / 2, "%s", snak);
 
     getch();
 
