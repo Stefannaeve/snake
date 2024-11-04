@@ -10,6 +10,9 @@ RM = rm -f
 
 OBJDIR = obj
 
+$(OBJDIR):
+	mkdir -p $(OBJDIR)
+
 # PATHS
 _DEPS = main.h Arraylist.h introScreen.h SNLogger.h
 DEPS = $(patsubst %, $(INCLDIR)/%, $(_DEPS))
@@ -18,7 +21,7 @@ _OBJS = main.o Arraylist.o introScreen.o SNLogger.o
 OBJS = $(patsubst %, $(OBJDIR)/%, $(_OBJS))
 
 # RULES
-$(OBJDIR)/%.o: $(SRCDIR)/%.c $(DEPS)
+$(OBJDIR)/%.o: $(SRCDIR)/%.c $(DEPS) | $(OBJDIR)
 	$(CC) -c -o $@ $< $(CFLAGS)
 	
 $(TARGET): $(OBJS)
