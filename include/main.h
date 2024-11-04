@@ -15,7 +15,23 @@
 
 #define SNAKE_HEAD '@'
 #define SNAKE_BODY '='
+#define SNAKE_TAIL '.'
+#define EMPTY_ ' '
+#define APPLE_ 'x'
+#define WALL_ '|'
 #define POINT 'o'
+#define X_ 'x'
+
+typedef enum _BLOCK_TYPE {
+    SNAKEHEAD,
+    SNAKEBODY,
+    SNAKETAIL,
+    EMPTY,
+    APPLE,
+    WALL,
+    X
+
+} BLOCK_TYPE;
 
 typedef struct _RENDER_BLOCK {
     char startPosition;
@@ -24,6 +40,7 @@ typedef struct _RENDER_BLOCK {
 } RENDER_BLOCK;
 
 typedef struct _BLOCK {
+    BLOCK_TYPE blockType;
     int x;
     int y;
     int actionPositionMetaPositionX;

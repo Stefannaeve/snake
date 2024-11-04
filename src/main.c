@@ -6,6 +6,7 @@
 #include "../include/introScreen.h"
 
 void renderBoard(BOARD *board, int row, int col);
+void printBlock(BLOCK *block);
 
 int main(void) {
     BOARD board;
@@ -40,12 +41,12 @@ int main(void) {
         board.board[i] = malloc(board.ySize * sizeof(BLOCK));
     }
 
+    logDebug("Why doesnt this work goddangit");
+
     for (int i = 0; i < board.xSize; ++i) {
         for (int j = 0; j < board.ySize; ++j) {
             BLOCK block;
-            block.render_block.startPosition = '[';
-            block.render_block.actionPosition = 'x';
-            block.render_block.endPosition = ']';
+            block.blockType = EMPTY;
             block.x = i;
             block.y = j;
             board.board[i][j] = block;
@@ -79,7 +80,7 @@ int main(void) {
     for (int i = 0; i < board.ySize; ++i) {
         for (int j = 0; j < board.xSize; ++j) {
             BLOCK block = board.board[i][j];
-            mvprintw(block.actionPositionMetaPositionY, block.actionPositionMetaPositionX, " ");
+            printBlock(&block);
             refresh();
             usleep(10000);
         }
@@ -92,19 +93,44 @@ int main(void) {
     return 0;
 }
 
+void printBlock(BLOCK *block){
+    char type;
+    switch(block->blockType) {
+        case SNAKEHEAD:
+            type = SNAKE_HEAD;
+            break;
+        case SNAKEBODY:
+            type = SNAKE_BODY;
+            break;
+        case SNAKETAIL:
+            type = SNAKE_TAIL;
+            break;
+        case EMPTY:
+            type = EMPTY_;
+            break;
+        case APPLE:
+            type = APPLE_;
+            break;
+        case WALL:
+            type = WALL_;
+            break;
+        case X:
+            type = X_;
+            }
+    mvprintw(block->actionPositionMetaPositionY, block->actionPositionMetaPositionX, "%c", type);
+}
+
 void renderBoard(BOARD *board, int row, int col) {
     int y = board->ySize / 2;
     int x = (board->xSize / 2)*3;
     int xMiddle = col / 2;
     int yMiddle = row / 2;
-    logDebug("Row: %d, Col: %d, y: %d, x: %d", row, col, y, x);
     for (int i = 0; i < board->ySize; ++i) {
         for (int j = 0; j < board->xSize; ++j) {
             //printf("%c%c%c", board->board[i][j].render_block.startPosition, board->board[i][j].render_block.actionPosition, board->board[i][j].render_block.endPosition);
-            logDebug("StartPosition: %d, actionPosition: %d, endPosition: %d", xMiddle-x + j*3, xMiddle-x + j*3+1, xMiddle-x + j*3+2);
-            mvprintw(yMiddle-y + i, xMiddle-x + j*3, "%c", board->board[i][j].render_block.startPosition);
-            mvprintw(yMiddle-y + i, xMiddle-x + j*3+1, "%c", board->board[i][j].render_block.actionPosition);
-            mvprintw(yMiddle-y + i, xMiddle-x + j*3+2, "%c", board->board[i][j].render_block.endPosition);
+            mvprintw(yMiddle-y + i, xMiddle-x + j*3, "[");
+            mvprintw(yMiddle-y + i, xMiddle-x + j*3+1, "x");
+            mvprintw(yMiddle-y + i, xMiddle-x + j*3+2, "]");
 
             board->board[i][j].actionPositionMetaPositionY = yMiddle-y + i;
             board->board[i][j].actionPositionMetaPositionX = xMiddle-x + j*3+1;
