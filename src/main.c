@@ -57,26 +57,6 @@ int main(void) {
 
     getch();
 
-    ARRAYLIST snake = createList();
-    for (int i = 0; i < INITIAL_SNAKE_LENGTH; ++i) {
-        if (i == 0) {
-            BLOCK *block = &board.board[INITIAL_SNAKE_XPOSITION][INITIAL_SNAKE_YPOSITION+INITIAL_SNAKE_LENGTH-i];
-            block->render_block.actionPosition = SNAKE_HEAD;
-            snake.nodes[i].positionX = block->x;
-            snake.nodes[i].positionY = block->y;
-            snake.nodes[i].positionParentNodeX = 0;
-            snake.nodes[i].positionParentNodeY = 0;
-        } else {
-            BLOCK *block = &board.board[INITIAL_SNAKE_XPOSITION][INITIAL_SNAKE_YPOSITION+INITIAL_SNAKE_LENGTH-i];
-            const BLOCK *formerBlock = &board.board[INITIAL_SNAKE_XPOSITION][INITIAL_SNAKE_YPOSITION+INITIAL_SNAKE_LENGTH-i-1];
-            block->render_block.actionPosition = SNAKE_BODY;
-            snake.nodes[i].positionX = block->x;
-            snake.nodes[i].positionY = block->y;
-            snake.nodes[i].positionParentNodeX = formerBlock->x;
-            snake.nodes[i].positionParentNodeY = formerBlock->y;
-        }
-    }
-
     for (int i = 0; i < board.ySize; ++i) {
         for (int j = 0; j < board.xSize; ++j) {
             BLOCK block = board.board[i][j];
@@ -84,6 +64,24 @@ int main(void) {
             refresh();
             usleep(10000);
         }
+    }
+
+    getch();
+
+    ARRAYLIST snake = createList();
+    for (int i = 0; i < INITIAL_SNAKE_LENGTH; ++i) {
+        BLOCK *block = &board.board[INITIAL_SNAKE_XPOSITION][INITIAL_SNAKE_YPOSITION+INITIAL_SNAKE_LENGTH-i];
+        if (i == 0) {
+            block->blockType = SNAKEHEAD;
+        } else if (i == INITIAL_SNAKE_LENGTH-1){
+            block->blockType = SNAKETAIL;
+        } else {
+            block->blockType = SNAKEBODY;
+        }
+        snake.blocks[i] = block;
+        printBlock(block);
+        refresh();
+        usleep(500000);
     }
 
     getch();
