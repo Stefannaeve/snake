@@ -11,6 +11,8 @@ add_executable(snake src/main.c
         include/introScreen.h
         src/SNLogger.c
         include/SNLogger.h
+        src/game.c
+        include/game.h
 )
 
 find_package(Curses REQUIRED)
