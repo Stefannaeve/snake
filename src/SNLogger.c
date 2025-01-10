@@ -41,5 +41,6 @@ void SNLogger(unsigned long ulErrorType, int iLine, const char *szFile, const ch
     va_end(vaArgumentPointer);
 
     fprintf(fLogFile, "%04i: %s:%s Path: %s:%i\n", iCallCounter, pszType, szOutputString, szFile, iLine);
+    fflush(fLogFile);
     iCallCounter++;
 }
