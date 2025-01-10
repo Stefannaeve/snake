@@ -19,17 +19,27 @@ int introScreen() {
     bool colsDevisable;
 
     getmaxyx(stdscr, row, col);
-    pixelCount = row * col;
     char character = ':';
     char sideCharacter = '-';
-    int status = 0;
     while (1) {
+        // We hit the point in the beginning screen where we want to stop
+        // row / 4 * 3 < finishedrows
+            // row is the width of the screen
+            // we divide it by 4 to find the quarter of the screen
+            // we multiply that by three to find the position of the last quarter
+            // we check if the position of the last quarter is less that the finished rows
+                // If that is the case, we stop the program, as the while loop is entrenching upon the last quarter in the middle
+        // col / 4 * 3 < finishedCols
+            // same as row
+        // !(finishedColumns % 2) && !(finishedRows % 2)
+            // ensures that we are at the right iteration for the right position of rows and cols
         if (((row / 4) * 3 < finishedRows || (col / 4) * 3 < finishedColumns) && (!(finishedColumns % 2) && !(finishedRows % 2))) {
             usleep(30000);
             refresh();
             break;
         }
 
+        // next two if statements is only for the beginning of the while loop
         if (finishedRows == 0) {
             attron(COLOR_PAIR(1));
             for (int i = 0; i < col - finishedColumns; ++i) {
@@ -49,6 +59,7 @@ int introScreen() {
             finishedColumns++;
         }
 
+        // We update the rows devisable every if statement, to find the right modulo variable for the rows and cols
         rowsDevisable = finishedRows % 2;
         colsDevisable = finishedColumns % 2;
 
