@@ -15,6 +15,11 @@ int game();
 #define INITIAL_SNAKE_XPOSITION 6
 #define INITIAL_SNAKE_YPOSITION 4
 
+#define SPEED 1000
+
+#define ERROR -1
+#define PASS 0
+
 #define SNAKE_HEAD '@'
 #define SNAKE_BODY '='
 #define SNAKE_TAIL '.'

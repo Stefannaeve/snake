@@ -34,7 +34,7 @@ int introScreen() {
         // !(finishedColumns % 2) && !(finishedRows % 2)
             // ensures that we are at the right iteration for the right position of rows and cols
         if (((row / 4) * 3 < finishedRows || (col / 4) * 3 < finishedColumns) && (!(finishedColumns % 2) && !(finishedRows % 2))) {
-            usleep(30000);
+            usleep(SPEED*30);
             refresh();
             break;
         }
