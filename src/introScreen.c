@@ -141,17 +141,17 @@ void enterUserName() {
 
     int row, col, rowsDevisable, changeForCentering = 0;
     char askUserName[] = "Enter your username: ";
-    char *snake = "S N A K E   ";
-    char snak[17] = {0};
-    char something[5];
-    something[0] = SNAKE_TAIL;
-    something[1] = SNAKE_BODY;
-    something[2] = SNAKE_BODY;
-    something[3] = SNAKE_HEAD;
-    something[4] = '\0';
-    strncpy(snak, snake, 12);
-    strncat(snak, something, 4);
-    snak[16] = '\0';
+    char *title = "S N A K E   ";
+    char titleWithSnake[17] = {0};
+    char snakeBody[5];
+    snakeBody[0] = SNAKE_TAIL;
+    snakeBody[1] = SNAKE_BODY;
+    snakeBody[2] = SNAKE_BODY;
+    snakeBody[3] = SNAKE_HEAD;
+    snakeBody[4] = '\0';
+    strncpy(titleWithSnake, title, 12);
+    strncat(titleWithSnake, snakeBody, 4);
+    titleWithSnake[16] = '\0';
     char userName[10];
 
     getmaxyx(stdscr, row, col);
@@ -165,7 +165,7 @@ void enterUserName() {
         changeForCentering = 1;
     }
 
-    mvprintw(row / 2 - changeForCentering, (col - strlen(snake)) / 2, "%s", snak);
+    mvprintw(row / 2 - changeForCentering, (col - strlen(title)) / 2, "%s", titleWithSnake);
 
     getch();
 
