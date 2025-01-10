@@ -14,10 +14,10 @@ $(OBJDIR):
 	mkdir -p $(OBJDIR)
 
 # PATHS
-_DEPS = main.h Arraylist.h introScreen.h SNLogger.h
+_DEPS = main.h Arraylist.h introScreen.h SNLogger.h game.h
 DEPS = $(patsubst %, $(INCLDIR)/%, $(_DEPS))
 
-_OBJS = main.o Arraylist.o introScreen.o SNLogger.o
+_OBJS = main.o Arraylist.o introScreen.o SNLogger.o game.o
 OBJS = $(patsubst %, $(OBJDIR)/%, $(_OBJS))
 
 # RULES

@@ -1,4 +1,4 @@
-#include "../include/main.h"
+#include "../include/game.h"
 #include "../include/introScreen.h"
 #include <string.h>
 

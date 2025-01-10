@@ -3,7 +3,7 @@
 #include <stdio.h>
 #include <stdarg.h>
 #include "../include/SNLogger.h"
-#include "../include/main.h"
+#include "../include/game.h"
 
 int globalDebug = TRUE;
 

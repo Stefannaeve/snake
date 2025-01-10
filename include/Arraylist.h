@@ -1,7 +1,7 @@
 #ifndef ARRAYLIST_H
 #define ARRAYLIST_H
 
-#include "main.h"
+#include "game.h"
 
 #define INITIAL_SIZE 8
 
