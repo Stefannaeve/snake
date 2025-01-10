@@ -7,8 +7,8 @@
 #include "../include/SNLogger.h"
 #include <time.h>
 
-#define BOARD_X_LENGTH 12
-#define BOARD_Y_LENGTH 12
+#define BOARD_X_LENGTH 14
+#define BOARD_Y_LENGTH 14
 #define INITIAL_SNAKE_LENGTH 4
 #define INITIAL_SNAKE_XPOSITION 6
 #define INITIAL_SNAKE_YPOSITION 4
@@ -18,7 +18,7 @@
 #define SNAKE_TAIL '.'
 #define EMPTY_ ' '
 #define APPLE_ 'x'
-#define WALL_ '|'
+#define WALL_ '%'
 #define POINT 'o'
 #define X_ 'x'
 
