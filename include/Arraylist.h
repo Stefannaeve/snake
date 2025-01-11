@@ -5,13 +5,6 @@
 
 #define INITIAL_SIZE 8
 
-typedef struct _NODE {
-    int positionParentNodeX;
-    int positionParentNodeY;
-    int positionX;
-    int positionY;
-} NODE;
-
 typedef struct _ARRAYLIST {
     int capacity;
     int size;

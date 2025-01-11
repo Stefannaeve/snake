@@ -15,7 +15,12 @@ int game();
 #define INITIAL_SNAKE_XPOSITION 6
 #define INITIAL_SNAKE_YPOSITION 4
 
-#define SPEED 1000
+#define SPEED 10
+
+#define UP 0
+#define DOWN 1
+#define LEFT 2
+#define RIGHT 3
 
 #define ERROR -1
 #define PASS 0
