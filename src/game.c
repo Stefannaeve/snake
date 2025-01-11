@@ -65,7 +65,6 @@ int game() {
         for (int j = 0; j < board.xSize; ++j) {
             BLOCK block = board.board[i][j];
             printBlock(&block);
-            refresh();
             usleep(SPEED*10);
         }
     }
@@ -82,6 +81,12 @@ int game() {
 
     getch();
 
+    moveSnake(&snake, &board);
+    usleep(300000);
+    moveSnake(&snake, &board);
+    usleep(300000);
+    moveSnake(&snake, &board);
+    usleep(300000);
     moveSnake(&snake, &board);
 
     getch();
@@ -122,6 +127,7 @@ void printBlock(BLOCK *block){
     }
     logDebug("actionPositionY: %d, actionPositionX: %d, y: %d, x: %d", block->actionPositionMetaPositionY, block->actionPositionMetaPositionX, block->y, block->x);
     mvprintw(block->actionPositionMetaPositionY, block->actionPositionMetaPositionX, "%c", type);
+    refresh();
 }
 
 void renderBoard(BOARD *board, int row, int col) {
@@ -189,7 +195,6 @@ void addWallsToBoard(BOARD *board) {
 
         printBlock(&board->board[0][i]);
         printBlock(&board->board[board->ySize-1][i]);
-        refresh();
         usleep(SPEED*10);
     }
 
@@ -200,7 +205,6 @@ void addWallsToBoard(BOARD *board) {
 
         printBlock(&board->board[i][0]);
         printBlock(&board->board[i][board->xSize-1]);
-        refresh();
         usleep(SPEED*50);
     }
 }
@@ -217,10 +221,7 @@ void creatingSnake(ARRAYLIST *snake, BOARD *board) {
             block->blockType = SNAKEBODY;
         }
         snake->blocks[i] = block;
-        snake->blocks[i]->x = INITIAL_SNAKE_XPOSITION;
-        snake->blocks[i]->y = INITIAL_SNAKE_YPOSITION+INITIAL_SNAKE_LENGTH-i;
         printBlock(block);
-        refresh();
         usleep(SPEED*500);
     }
 
@@ -229,10 +230,6 @@ void creatingSnake(ARRAYLIST *snake, BOARD *board) {
 void moveSnake(ARRAYLIST *snake, BOARD *board) {
     int sizeOfSnake = snake->size;
     int currentPosition = UP;
-    int newXActionPosition = 0;
-    int newYActionPosition = 0;
-    int formerXActionPosition = 0;
-    int formerYActionPosition = 0;
 
     int newYPosition = 0;
     int newXPosition = 0;
@@ -241,10 +238,8 @@ void moveSnake(ARRAYLIST *snake, BOARD *board) {
 
     switch (currentPosition) {
         case UP:
-            newXActionPosition = snake->blocks[0]->actionPositionMetaPositionX;
-            newYActionPosition = snake->blocks[0]->actionPositionMetaPositionY-1;
-            newYPosition = snake->blocks[0]->y-1;
-            newXPosition = snake->blocks[0]->x;
+            newYPosition = snake->blocks[0]->y;
+            newXPosition = snake->blocks[0]->x-1;
             break;
         case DOWN:
             break;
@@ -255,38 +250,30 @@ void moveSnake(ARRAYLIST *snake, BOARD *board) {
     }
 
     for (int i = 0; i < sizeOfSnake; i++) {
-        logDebug("%d", i);
-        logDebug("%d", i);
-        logDebug("%d", i);
-        logDebug("1: formerYPosition Y: %d", formerYPosition);
-        logDebug("1: formerXPosition X: %d", formerXPosition);
         // SET FORMER POSITIONS TO THE CURRENT NODE POSITION
-        formerXActionPosition = snake->blocks[i]->actionPositionMetaPositionX;
-        formerYActionPosition = snake->blocks[i]->actionPositionMetaPositionY;
         formerYPosition = snake->blocks[i]->y;
         formerXPosition = snake->blocks[i]->x;
 
-        //SET CURRENT NODE POSITIONS TO THE NEW POSITIONS
-        snake->blocks[i]->actionPositionMetaPositionX = newXActionPosition;
-        snake->blocks[i]->actionPositionMetaPositionY = newYActionPosition;
-        snake->blocks[i]->y = newYPosition;
-        snake->blocks[i]->x = newXPosition;
+        //SET CURRENT POINTER TO THE NEW MEMORY PLACE, ADD RIGHT BLOCKTYPE
+        snake->blocks[i] = &board->board[newXPosition][newYPosition];
+        if (i < 1) {
+            logDebug("i: ", i);
+            snake->blocks[i]->blockType = SNAKEHEAD;
+        } else if (i == sizeOfSnake-1) {
+            snake->blocks[i]->blockType = SNAKETAIL;
+        } else {
+            snake->blocks[i]->blockType = SNAKEBODY;
+        }
 
         // SET NEW POSITION TO THE ORIGINAL CURRENT NODE POSITIONS
-        newXActionPosition = formerXActionPosition;
-        newYActionPosition = formerYActionPosition;
         newYPosition = formerYPosition;
         newXPosition = formerXPosition;
 
-        logDebug("2: snake->blocks[i]->y Y: %d", snake->blocks[i]->y);
-        logDebug("2: snake->blocks[i]->x X: %d", snake->blocks[i]->x);
-
         printBlock(snake->blocks[i]);
 
+        // SET EMPTY SPACE WHERE THE SNAKE LEFT FROM, IF NOT ELONGATED BY APPLE
         if (i == sizeOfSnake-1) {
-            logDebug("3: formerYPosition Y: %d", formerYPosition);
-            logDebug("3: formerXPosition X: %d", formerXPosition);
-            board->board[formerXPosition][formerYPosition].blockType = WALL;
+            board->board[formerXPosition][formerYPosition].blockType = EMPTY;
             printBlock(&board->board[formerXPosition][formerYPosition]);
         }
 
