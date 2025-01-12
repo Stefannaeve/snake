@@ -2,12 +2,10 @@
 
 #include <stdlib.h>
 
-ARRAYLIST createList() {
-    ARRAYLIST arraylist;
-    arraylist.capacity = INITIAL_SIZE;
-    arraylist.size = 0;
-    arraylist.blocks = calloc(INITIAL_SIZE, sizeof(BLOCK));
-    return arraylist;
+void createList(ARRAYLIST *arraylist) {
+    arraylist->capacity = INITIAL_SIZE;
+    arraylist->size = 0;
+    arraylist->blocks = calloc(INITIAL_SIZE, sizeof(BLOCK));
 }
 
 void addBlock(ARRAYLIST *arraylist, BLOCK *block) {
