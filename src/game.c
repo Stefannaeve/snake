@@ -19,7 +19,11 @@ void addWallsToBoard(BOARD *board);
 
 void creatingSnake(ARRAYLIST *snake, BOARD *board);
 
-void moveSnake(ARRAYLIST *snake, BOARD *board);
+void gameLoop(ARRAYLIST *snake, BOARD *board);
+
+void *clientLoop(void *sentClient);
+
+void *moveSnake(void *sentServer);
 
 int game() {
     BOARD board;
@@ -82,42 +86,18 @@ int game() {
     addWallsToBoard(&board);
 
     // Creating the actual snake
-    ARRAYLIST snake = createList();
-    creatingSnake(&snake, &board);
+    ARRAYLIST snakeObject;
+    ARRAYLIST *snake = &snakeObject;
 
+    createList(snake);
+    creatingSnake(snake, &board);
     getch();
 
-    moveSnake(&snake, &board);
-    usleep(300000);
-    moveSnake(&snake, &board);
-    usleep(300000);
-    moveSnake(&snake, &board);
-    usleep(300000);
-    moveSnake(&snake, &board);
-
-    getch();
+    //gameLoop(snake, &board);
 
     endwin();
 
     return 0;
-}
-
-void clientLoop(void *sentClient) {
-    CLIENT *client = (CLIENT *) sentClient;
-
-    char validKeys[] = {'W', 'A', 'S', 'D', 'w', 'a', 's', 'd'};
-
-    int currentButton = 0;
-
-    while (client->done) {
-        currentButton = getc(stdin);
-        for (int i = 0; i < sizeof(validKeys); i++) {
-            if (currentButton == validKeys[i]) {
-                *client->clientPosition = getc(stdin);
-                break;
-            }
-        }
-    }
 }
 
 void gameLoop(ARRAYLIST *snake, BOARD *board) {
@@ -137,15 +117,33 @@ void gameLoop(ARRAYLIST *snake, BOARD *board) {
     server->done = &done;
 
 
-    if (pthread_create(&threadClient, NULL, clientLoop, client) != 0) {
+    if (pthread_create(&threadClient, NULL, clientLoop, (void *) client) != 0) {
         perror("Could not create thread for client");
     }
-    if (pthread_create(&threadServer, NULL, moveSnake, server) != 0) {
+    if (pthread_create(&threadServer, NULL, moveSnake, (void *) server) != 0) {
         perror("Could not create thread for client");
     }
 }
 
-void moveSnake(void *sentServer) {
+void *clientLoop(void *sentClient) {
+    CLIENT *client = (CLIENT *) sentClient;
+
+    char validKeys[] = {'W', 'A', 'S', 'D', 'w', 'a', 's', 'd'};
+
+    int currentButton = 0;
+
+    while (client->done) {
+        currentButton = getc(stdin);
+        for (int i = 0; i < sizeof(validKeys); i++) {
+            if (currentButton == validKeys[i]) {
+                *client->clientPosition = getc(stdin);
+                break;
+            }
+        }
+    }
+}
+
+void *moveSnake(void *sentServer) {
     SERVER *server = (SERVER *) sentServer;
 
     const int sizeOfSnake = server->snake->size;
@@ -157,7 +155,7 @@ void moveSnake(void *sentServer) {
     int formerXPosition = 0;
 
     while (server->done) {
-        usleep(30000);
+        usleep(300000);
         currentPosition = *server->clientPosition;
         switch (currentPosition) {
             case UP:
@@ -190,7 +188,6 @@ void moveSnake(void *sentServer) {
             //SET CURRENT POINTER TO THE NEW MEMORY PLACE, ADD RIGHT BLOCKTYPE
             server->snake->blocks[i] = &server->board->board[newXPosition][newYPosition];
             if (i < 1) {
-                logDebug("i: ", i);
                 server->snake->blocks[i]->blockType = SNAKEHEAD;
             } else if (i == sizeOfSnake - 1) {
                 server->snake->blocks[i]->blockType = SNAKETAIL;
@@ -242,8 +239,7 @@ void printBlock(BLOCK *block) {
         case X:
             type = X_;
     }
-    logDebug("actionPositionY: %d, actionPositionX: %d, y: %d, x: %d", block->actionPositionMetaPositionY,
-             block->actionPositionMetaPositionX, block->y, block->x);
+
     mvprintw(block->actionPositionMetaPositionY, block->actionPositionMetaPositionX, "%c", type);
     refresh();
 }
@@ -300,7 +296,6 @@ int populateBoardWithEmptyBlocks(BOARD *board) {
             block.x = i;
             block.y = j;
             board->board[i][j] = block;
-            logDebug("y: %d, x: %d", block.y, block.x);
         }
     }
     return PASS;

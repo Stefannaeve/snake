@@ -1,7 +1,7 @@
 #ifndef ARRAYLIST_H
 #define ARRAYLIST_H
 
-#include "game.h"
+#include "block.h"
 
 #define INITIAL_SIZE 8
 
@@ -11,7 +11,7 @@ typedef struct _ARRAYLIST {
     BLOCK **blocks;
 } ARRAYLIST;
 
-ARRAYLIST createList();
+void createList();
 void addBlock(ARRAYLIST *arraylist, BLOCK *block);
 
 #endif //ARRAYLIST_H

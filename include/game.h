@@ -6,7 +6,8 @@
 #include <string.h>
 #include "../include/SNLogger.h"
 #include <time.h>
-#include "../include/Arraylist.h"
+#include "Arraylist.h"
+#include "block.h"
 
 int game();
 
@@ -34,32 +35,6 @@ int game();
 #define WALL_ '%'
 #define POINT 'o'
 #define X_ 'x'
-
-typedef enum _BLOCK_TYPE {
-    SNAKEHEAD,
-    SNAKEBODY,
-    SNAKETAIL,
-    EMPTY,
-    APPLE,
-    WALL,
-    X
-
-} BLOCK_TYPE;
-
-typedef struct _RENDER_BLOCK {
-    char startPosition;
-    char actionPosition;
-    char endPosition;
-} RENDER_BLOCK;
-
-typedef struct _BLOCK {
-    BLOCK_TYPE blockType;
-    int x;
-    int y;
-    int actionPositionMetaPositionX;
-    int actionPositionMetaPositionY;
-    RENDER_BLOCK render_block;
-} BLOCK;
 
 typedef struct _BOARD {
     int xSize;
