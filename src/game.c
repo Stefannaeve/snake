@@ -6,6 +6,7 @@
 #include <unistd.h>
 #include "../include/introScreen.h"
 #include <pthread.h>
+#include <fcntl.h>
 
 void renderBoard(BOARD *board, int row, int col);
 
@@ -21,9 +22,9 @@ void creatingSnake(ARRAYLIST *snake, BOARD *board);
 
 void gameLoop(ARRAYLIST *snake, BOARD *board);
 
-void *clientLoop(void *sentClient);
+void clientLoop(unsigned int *clientPosition);
 
-void *moveSnake(void *sentServer);
+void moveSnake(ARRAYLIST *snake, unsigned int *clientPosition, BOARD *board);
 
 int game() {
     BOARD board;
@@ -93,7 +94,7 @@ int game() {
     creatingSnake(snake, &board);
     getch();
 
-    //gameLoop(snake, &board);
+    gameLoop(snake, &board);
 
     endwin();
 
@@ -101,52 +102,46 @@ int game() {
 }
 
 void gameLoop(ARRAYLIST *snake, BOARD *board) {
-    pthread_t threadClient, threadServer;
     unsigned int clientPosition = 0;
     int done = 1;
 
-    CLIENT *client = 0;
-    SERVER *server = 0;
+    halfdelay(10);
 
-    client->clientPosition = &clientPosition;
-    client->done = &done;
-
-    server->clientPosition = &clientPosition;
-    server->board = board;
-    server->snake = snake;
-    server->done = &done;
-
-
-    if (pthread_create(&threadClient, NULL, clientLoop, (void *) client) != 0) {
-        perror("Could not create thread for client");
-    }
-    if (pthread_create(&threadServer, NULL, moveSnake, (void *) server) != 0) {
-        perror("Could not create thread for client");
+    while (1) {
+        clientLoop(&clientPosition);
+        moveSnake(snake, &clientPosition, board);
     }
 }
 
-void *clientLoop(void *sentClient) {
-    CLIENT *client = (CLIENT *) sentClient;
+void clientLoop(unsigned int *clientPosition) {
+    logDebug("10");
 
     char validKeys[] = {'W', 'A', 'S', 'D', 'w', 'a', 's', 'd'};
 
     int currentButton = 0;
+    logDebug("Before fgetc");
+    currentButton = fgetc(stdin);
+    logDebug("After fgetc -> currentButton = %d", currentButton);
 
-    while (client->done) {
-        currentButton = getc(stdin);
+
+    if (currentButton != ERR) {
+        logDebug("11,2");
         for (int i = 0; i < sizeof(validKeys); i++) {
+            logDebug("12%d", i);
             if (currentButton == validKeys[i]) {
-                *client->clientPosition = getc(stdin);
+                logDebug("13%d", i);
+                *clientPosition = currentButton;
                 break;
             }
         }
+    } else {
     }
 }
 
-void *moveSnake(void *sentServer) {
-    SERVER *server = (SERVER *) sentServer;
+void moveSnake(ARRAYLIST *snake, unsigned int *clientPosition, BOARD *board) {
+    logDebug("20");
 
-    const int sizeOfSnake = server->snake->size;
+    const int sizeOfSnake = snake->size;
     unsigned int currentPosition = UP;
 
     int newYPosition = 0;
@@ -154,58 +149,58 @@ void *moveSnake(void *sentServer) {
     int formerYPosition = 0;
     int formerXPosition = 0;
 
-    while (server->done) {
-        usleep(300000);
-        currentPosition = *server->clientPosition;
-        switch (currentPosition) {
-            case UP:
-                newYPosition = server->snake->blocks[0]->y;
-                newXPosition = server->snake->blocks[0]->x - 1;
-                break;
-            case DOWN:
-                newYPosition = server->snake->blocks[0]->y;
-                newXPosition = server->snake->blocks[0]->x + 1;
-                break;
-            case LEFT:
-                newYPosition = server->snake->blocks[0]->y - 1;
-                newXPosition = server->snake->blocks[0]->x;
-                break;
-            case RIGHT:
-                newYPosition = server->snake->blocks[0]->y + 1;
-                newXPosition = server->snake->blocks[0]->x;
-                break;
-            default:
-                newYPosition = server->snake->blocks[0]->y;
-                newXPosition = server->snake->blocks[0]->x - 1;
-                break;
+    usleep(300000);
+    currentPosition = *clientPosition;
+
+    switch (currentPosition) {
+        case UP:
+            newYPosition = snake->blocks[0]->y;
+            newXPosition = snake->blocks[0]->x - 1;
+            break;
+        case DOWN:
+            newYPosition = snake->blocks[0]->y;
+            newXPosition = snake->blocks[0]->x + 1;
+            break;
+        case LEFT:
+            newYPosition = snake->blocks[0]->y - 1;
+            newXPosition = snake->blocks[0]->x;
+            break;
+        case RIGHT:
+            newYPosition = snake->blocks[0]->y + 1;
+            newXPosition = snake->blocks[0]->x;
+            break;
+        default:
+            newYPosition = snake->blocks[0]->y;
+            newXPosition = snake->blocks[0]->x - 1;
+            break;
+    }
+
+    for (int i = 0; i < sizeOfSnake; i++) {
+        logDebug("21");
+        // SET FORMER POSITIONS TO THE CURRENT NODE POSITION
+        formerYPosition = snake->blocks[i]->y;
+        formerXPosition = snake->blocks[i]->x;
+
+        //SET CURRENT POINTER TO THE NEW MEMORY PLACE, ADD RIGHT BLOCKTYPE
+        snake->blocks[i] = &board->board[newXPosition][newYPosition];
+        if (i < 1) {
+            snake->blocks[i]->blockType = SNAKEHEAD;
+        } else if (i == sizeOfSnake - 1) {
+            snake->blocks[i]->blockType = SNAKETAIL;
+        } else {
+            snake->blocks[i]->blockType = SNAKEBODY;
         }
 
-        for (int i = 0; i < sizeOfSnake; i++) {
-            // SET FORMER POSITIONS TO THE CURRENT NODE POSITION
-            formerYPosition = server->snake->blocks[i]->y;
-            formerXPosition = server->snake->blocks[i]->x;
+        // SET NEW POSITION TO THE ORIGINAL CURRENT NODE POSITIONS
+        newYPosition = formerYPosition;
+        newXPosition = formerXPosition;
 
-            //SET CURRENT POINTER TO THE NEW MEMORY PLACE, ADD RIGHT BLOCKTYPE
-            server->snake->blocks[i] = &server->board->board[newXPosition][newYPosition];
-            if (i < 1) {
-                server->snake->blocks[i]->blockType = SNAKEHEAD;
-            } else if (i == sizeOfSnake - 1) {
-                server->snake->blocks[i]->blockType = SNAKETAIL;
-            } else {
-                server->snake->blocks[i]->blockType = SNAKEBODY;
-            }
+        printBlock(snake->blocks[i]);
 
-            // SET NEW POSITION TO THE ORIGINAL CURRENT NODE POSITIONS
-            newYPosition = formerYPosition;
-            newXPosition = formerXPosition;
-
-            printBlock(server->snake->blocks[i]);
-
-            // SET EMPTY SPACE WHERE THE SNAKE LEFT FROM, IF NOT ELONGATED BY APPLE
-            if (i == sizeOfSnake - 1) {
-                server->board->board[formerXPosition][formerYPosition].blockType = EMPTY;
-                printBlock(&server->board->board[formerXPosition][formerYPosition]);
-            }
+        // SET EMPTY SPACE WHERE THE SNAKE LEFT FROM, IF NOT ELONGATED BY APPLE
+        if (i == sizeOfSnake - 1) {
+            board->board[formerXPosition][formerYPosition].blockType = EMPTY;
+            printBlock(&board->board[formerXPosition][formerYPosition]);
         }
     }
 }

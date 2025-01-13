@@ -6,6 +6,8 @@
 #include <string.h>
 #include "../include/SNLogger.h"
 #include <time.h>
+#include <bits/pthreadtypes.h>
+
 #include "Arraylist.h"
 #include "block.h"
 
@@ -41,17 +43,5 @@ typedef struct _BOARD {
     int ySize;
     BLOCK **board;
 } BOARD;
-
-typedef struct _CLIENT {
-    unsigned int *clientPosition;
-    int *done;
-} CLIENT;
-
-typedef struct _SERVER {
-    unsigned int *clientPosition;
-    int *done;
-    ARRAYLIST *snake;
-    BOARD *board;
-} SERVER;
 
 #endif //GAME_H
